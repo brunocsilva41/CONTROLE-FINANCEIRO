@@ -48,8 +48,8 @@ interface FinancialChartProps {
 
 export function FinancialChart({ data }: FinancialChartProps) {
   return (
-    <div className="bg-white p-6 rounded-xl shadow-sm">
-      <h2 className="text-lg font-semibold mb-4">Financial Overview</h2>
+    <div className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-sm">
+      <h2 className="text-lg font-semibold mb-4 text-gray-900 dark:text-white">Financial Overview</h2>
       <Line options={options} data={data} />
     </div>
   );

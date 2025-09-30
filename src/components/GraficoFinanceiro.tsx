@@ -26,10 +26,19 @@ ChartJS.register(
 interface GraficoFinanceiroProps {
   transacoes: Transacao[];
   tipo: 'linha' | 'barra';
+  mesAtual?: Date;
 }
 
-export function GraficoFinanceiro({ transacoes, tipo }: GraficoFinanceiroProps) {
-  const dadosPorDia = transacoes.reduce((acc, transacao) => {
+export function GraficoFinanceiro({ transacoes, tipo, mesAtual }: GraficoFinanceiroProps) {
+  // Filtrar transações do mês atual se mesAtual for fornecido
+  const transacoesFiltradas = mesAtual
+    ? transacoes.filter(t =>
+        t.data.getMonth() === mesAtual.getMonth() &&
+        t.data.getFullYear() === mesAtual.getFullYear()
+      )
+    : transacoes;
+
+  const dadosPorDia = transacoesFiltradas.reduce((acc, transacao) => {
     const data = transacao.data.toISOString().split('T')[0];
     if (!acc[data]) {
       acc[data] = { entradas: 0, saidas: 0 };
@@ -76,14 +85,17 @@ export function GraficoFinanceiro({ transacoes, tipo }: GraficoFinanceiroProps) 
       y: {
         beginAtZero: true,
         ticks: {
-          callback: (value: number) => `R$ ${value.toFixed(2)}`,
+          callback: (value: string | number) => {
+            const numValue = typeof value === 'string' ? parseFloat(value) : value;
+            return `R$ ${numValue.toFixed(2)}`;
+          },
         },
       },
     },
   };
 
   return (
-    <div className="bg-white p-6 rounded-xl shadow-sm">
+    <div className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-sm">
       <div className="mb-4">
         {tipo === 'linha' ? (
           <Line options={opcoes} data={dados} />

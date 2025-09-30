@@ -2,9 +2,24 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Aplica o tema imediatamente para evitar flash de conteúdo não estilizado */
+:root {
+  @apply antialiased;
+}
+
+/* Tema claro (padrão) */
+:root:not(.dark) {
+  @apply text-gray-900;
+}
+
+/* Tema escuro */
+:root.dark {
+  @apply text-white;
+}
+
 @layer base {
   body {
-    @apply antialiased text-gray-900;
+    @apply antialiased text-gray-900 dark:text-white;
   }
 }
 
